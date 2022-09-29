@@ -1,0 +1,31 @@
+CC = gcc
+FLAGS = -Wall -std=c11
+
+pro_all = my_little_sh
+
+obj_need = test.o
+
+GIT_HOOKS := .git/hooks/applied
+
+all: $(pro_all) $(GIT_HOOKS)
+
+
+my_little_sh: $(obj_need)
+	$(CC) $(FLAGS) -o test $(obj_need)
+
+$(GIT_HOOKS):
+	@.githooks/install-git-hooks
+	@echo
+
+#deal most of the .o file
+%.o: %.c %.h
+	$(CC) $(FLAGS) -c $< 
+#.o file in pro_all that do not have .h
+%.o: %.c
+	$(CC) $(FLAGS) -c $< 
+
+.PHONY: clean
+clean_obj:
+	rm -f *.o
+clean:
+	rm -f $(pro_all) *.o
